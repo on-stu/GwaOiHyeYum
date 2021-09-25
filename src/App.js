@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import AuthPage from "./pages/AuthPage";
+import RegisterPage from "./pages/RegisterPage";
+import { useEffect } from "react";
+import { getUserObj } from "./actions/userActions";
+import MainPage from "./pages/MainPage";
 
 function App() {
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.user);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    dispatch(getUserObj(token));
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        {!userInfo ? (
+          <>
+            <Route exact path="/" component={AuthPage} />
+            <Route exact path="/register" component={RegisterPage} />
+          </>
+        ) : (
+          <>
+            <Route exact path="/" component={MainPage} />
+          </>
+        )}
+      </Switch>
+    </Router>
   );
 }
 
