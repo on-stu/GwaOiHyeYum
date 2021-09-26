@@ -13,7 +13,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #34495e;
+
   .loginContainer {
     width: 30%;
     min-width: 370px;
@@ -76,7 +76,6 @@ function AuthPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
-  const { Kakao } = window;
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -119,6 +118,7 @@ function AuthPage() {
             placeholder="아이디"
             type="text"
             value={username}
+            autoCapitalize="off"
             onChange={(event) => setUsername(event.target.value)}
           />
           <input

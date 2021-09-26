@@ -1,1 +1,1 @@
-export const Auth = "http://localhost:5000/auth";
+export const Auth = "https://gwaoi.loca.lt/auth";

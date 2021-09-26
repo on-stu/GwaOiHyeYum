@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { Auth } from "../api/consts";
+import CardContainer from "../components/CardContainer";
+import Calendar from "../components/Calendar";
 
 const SelectContainer = styled.div`
   display: flex;
@@ -46,6 +48,32 @@ const Container = styled.div`
   .buttonSpan {
     display: flex;
     justify-content: flex-end;
+  }
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  .container {
+    margin-top: 20px;
+    width: 60%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 20px;
+    row-gap: 20px;
+  }
+
+  @media screen and (max-width: 1024px) {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    .container {
+      width: 90%;
+      display: flex;
+      row-gap: 20px;
+      flex-direction: column;
+    }
   }
 `;
 
@@ -93,18 +121,18 @@ function MainPage() {
           </span>
         </Container>
       </Modal>
-      <div>
-        <h1>this is main page.</h1>
-        <Button
-          onClick={() => {
-            localStorage.removeItem("token");
-            history.push("/");
-            history.go(0);
-          }}
-        >
-          로그아웃
-        </Button>
-      </div>
+      <MainContainer>
+        <div className="container">
+          <CardContainer title="내 일정">
+            <Calendar />
+          </CardContainer>
+          <CardContainer title="내 수업" />
+          <CardContainer title="내 과제" />
+          <CardContainer title="내 퀴즈" />
+          <CardContainer title="자유 게시판" />
+          <CardContainer title="중고 교재 거래" />
+        </div>
+      </MainContainer>
     </>
   );
 }

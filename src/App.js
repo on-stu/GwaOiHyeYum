@@ -5,6 +5,8 @@ import RegisterPage from "./pages/RegisterPage";
 import { useEffect } from "react";
 import { getUserObj } from "./actions/userActions";
 import MainPage from "./pages/MainPage";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -17,18 +19,22 @@ function App() {
 
   return (
     <Router>
-      <Switch>
-        {!userInfo ? (
-          <>
+      {!userInfo ? (
+        <>
+          <Switch>
             <Route exact path="/" component={AuthPage} />
             <Route exact path="/register" component={RegisterPage} />
-          </>
-        ) : (
-          <>
+          </Switch>
+        </>
+      ) : (
+        <>
+          <Header />
+          <Switch>
             <Route exact path="/" component={MainPage} />
-          </>
-        )}
-      </Switch>
+          </Switch>
+        </>
+      )}
+      <Footer />
     </Router>
   );
 }
