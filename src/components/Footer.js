@@ -3,13 +3,12 @@ import styled from "styled-components";
 
 const FooterContainer = styled.div`
   width: 100%;
-  margin-top: 20px;
+  margin-top: 80px;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   color: #f5f5f5;
 `;
 

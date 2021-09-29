@@ -132,9 +132,13 @@ function Calendar() {
         {calendarObj &&
           calendarObj.output.map((item) => {
             if (item !== "/" && item !== 0) {
-              return <EachDate>{item.day.getDate()}</EachDate>;
+              return (
+                <EachDate key={item.day.getDate()}>
+                  {item.day.getDate()}
+                </EachDate>
+              );
             } else if (item === 0) {
-              return <EachDate></EachDate>;
+              return <EachDate key={Math.random()}></EachDate>;
             }
           })}
       </Container>

@@ -7,6 +7,8 @@ import { getUserObj } from "./actions/userActions";
 import MainPage from "./pages/MainPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ProfilePage from "./pages/ProfilePage";
+import ClassPage from "./pages/ClassPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +33,8 @@ function App() {
           <Header />
           <Switch>
             <Route exact path="/" component={MainPage} />
+            <Route path="/profile/:id" component={ProfilePage} />
+            <Route path="/class/:classId" component={ClassPage} />
           </Switch>
         </>
       )}

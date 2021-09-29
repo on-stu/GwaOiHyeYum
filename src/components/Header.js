@@ -2,8 +2,10 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@material-ui/core";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import styled from "styled-components";
+import BlankButton from "./BlankButton";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -39,15 +41,21 @@ const HeaderContainer = styled.div`
 
 function Header() {
   const history = useHistory();
+  const userInfo = useSelector((state) => state.user);
+
   return (
     <HeaderContainer>
       <div className="container">
         <div className="left">
           <FontAwesomeIcon id="icon" icon={faBars} />
-          <h2>과외 혜윰</h2>
+          <BlankButton onClick={() => history.push("/")}>
+            <h2>과외 혜윰</h2>
+          </BlankButton>
         </div>
         <div>
-          <Button>내 프로필</Button>
+          <Button onClick={() => history.push(`/profile/${userInfo._id}`)}>
+            내 프로필
+          </Button>
           <Button
             onClick={() => {
               localStorage.removeItem("token");
