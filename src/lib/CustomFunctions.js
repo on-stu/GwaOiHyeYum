@@ -21,7 +21,7 @@ export const getDisplayIcon = (displayIcon) => {
     case "postit":
       return faStickyNote;
     default:
-      return faBook;
+      return displayIcon;
   }
 };
 
@@ -38,7 +38,7 @@ export const getColor = (color) => {
     case "purple":
       return "#9b59b6";
     default:
-      return "#000000";
+      return color;
   }
 };
 

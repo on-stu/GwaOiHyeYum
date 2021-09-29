@@ -7,7 +7,7 @@ import { useHistory } from "react-router";
 import Modal from "../components/Modal";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faSadCry } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { Auth } from "../api/consts";
 import CardContainer from "../components/CardContainer";
@@ -135,8 +135,12 @@ function MainPage() {
       </Modal>
       <MainContainer>
         <div className="container">
-          <CardContainer title="내 일정">
-            <Calendar />
+          <CardContainer title="오늘 일정">
+            <Card
+              displayIcon={faSadCry}
+              iconcolor="gray"
+              title="오늘 일정이 없습니다!"
+            />
           </CardContainer>
           <CardContainer title="내 수업">
             {classes &&
@@ -168,6 +172,7 @@ function MainPage() {
             />
             <Card
               title="쎈 3단원 마무리"
+              displayIcon="book"
               iconcolor="#9b59b6"
               studentName="엄세정 학생"
             />
