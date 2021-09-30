@@ -14,5 +14,8 @@ const StyledButton = styled.button`
   font-size: 18px;
   height: fit-content;
   background-color: transparent;
+  :focus {
+    background-color: gray;
+  }
 `;
 export default BlankButton;

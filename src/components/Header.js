@@ -22,6 +22,7 @@ const HeaderContainer = styled.div`
   }
   .left {
     display: flex;
+    flex-direction: row;
     align-items: center;
     column-gap: 16px;
   }
@@ -29,6 +30,8 @@ const HeaderContainer = styled.div`
     display: none;
   }
   @media screen and (max-width: 1024px) {
+    position: sticky;
+    top: 0;
     .container {
       width: 90%;
       height: 64px;

@@ -59,3 +59,9 @@ export const getClass = async (id) => {
     console.log(error);
   }
 };
+
+export const updateUser = async (updatedUser) => {
+  console.log(updatedUser);
+  const response = await axios.post(`${Auth}/updateUser`, { updatedUser });
+  return response;
+};

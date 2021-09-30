@@ -15,6 +15,7 @@ import Calendar from "../components/Calendar";
 import Card from "../components/Card";
 import { getMyClasses } from "../actions/classesActions";
 import BlankButton from "../components/BlankButton";
+import NotYet from "../components/NotYet";
 
 const SelectContainer = styled.div`
   display: flex;
@@ -99,10 +100,6 @@ function MainPage() {
   useEffect(() => {
     dispatch(getMyClasses(userInfo));
   }, [userInfo]);
-
-  useEffect(() => {
-    console.log(classes);
-  }, [classes]);
 
   const chooseUserType = async () => {
     const updatedUser = { ...userInfo, usertype: usertype };
@@ -189,9 +186,24 @@ function MainPage() {
               displayIcon="check"
             />
           </CardContainer>
-          <CardContainer title="내 퀴즈" />
-          <CardContainer title="자유 게시판" />
-          <CardContainer title="중고 교재 거래" />
+          <CardContainer title="내 퀴즈">
+            <NotYet />
+          </CardContainer>
+          <CardContainer title="내 질문">
+            <NotYet />
+          </CardContainer>
+          <CardContainer title="과외 소개">
+            <NotYet />
+          </CardContainer>
+          <CardContainer title="공지사항">
+            <NotYet />
+          </CardContainer>
+          <CardContainer title="FAQ">
+            <NotYet />
+          </CardContainer>
+          <CardContainer title="혜윰 사용 설명서">
+            <NotYet />
+          </CardContainer>
         </div>
       </MainContainer>
     </>
