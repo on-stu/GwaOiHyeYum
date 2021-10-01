@@ -10,13 +10,18 @@ import Card from "../components/Card";
 import TextArea from "../components/TextArea";
 import { Button } from "@material-ui/core";
 import NotYet from "../components/NotYet";
+import { SelectContainer } from "./MainPage";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { Auth } from "../api/consts";
 
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-
   align-items: center;
+
   .container {
     margin-top: 20px;
     width: 60%;
@@ -38,17 +43,32 @@ const ProfileContainer = styled.div`
   }
   .itemBody {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+    input {
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 15px;
+      font-size: 13px;
+      outline: none;
+      border: none;
+    }
   }
+
   .itemFooter {
     display: flex;
     width: 100%;
     justify-content: flex-end;
   }
+
   .preview {
     display: flex;
     flex-direction: row;
     align-items: center;
   }
+
   img {
     width: 50px;
   }
@@ -59,11 +79,13 @@ const ProfileContainer = styled.div`
     flex-direction: column;
     row-gap: 5px;
   }
+
   .uploadContainer {
     position: relative;
     width: fit-content;
     height: fit-content;
   }
+
   .uploadButton {
     position: absolute;
     top: 0;
@@ -91,6 +113,12 @@ function ProfilePage({ match }) {
   const [photoURL, setPhotoURL] = useState("");
   const [isMyProfile, setIsMyProfile] = useState(false);
   const [myIntroduction, setMyIntroduction] = useState("");
+  const [usertype, setUsertype] = useState("");
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [quitPassword, setQuitPassword] = useState("");
+  const [quitReason, setQuitReason] = useState("");
 
   const userInfo = useSelector((state) => state.user);
   const classes = useSelector((state) => state.classes);
@@ -136,6 +164,67 @@ function ProfilePage({ match }) {
     }
   };
 
+  const updateUserType = async () => {
+    if (userInfo.usertype === "teacher" && userInfo.usertype !== usertype) {
+      if (
+        window.confirm(
+          "회원 유형을 변경하시겠습니까?\n교사에서 학생으로 변경 시 개설 강좌 정보가 사라집니다.\n(강좌는 남아있으나 앞으로 교사로서 강좌를 수정할 권한은 사라집니다.)"
+        )
+      ) {
+        const updatedUser = { ...userInfo, usertype: usertype };
+        const response = await updateUser(updatedUser);
+        if (response.data.status === "success") {
+          history.go(0);
+        }
+      }
+    } else {
+      if (
+        window.confirm(
+          "회원 유형을 변경하시겠습니까?\n학생에서 교사로 변경 시 현재 수강중인 수업에서 자동으로 탈퇴됩니다."
+        )
+      ) {
+        const updatedUser = { ...userInfo, usertype: usertype };
+        const response = await updateUser(updatedUser);
+        if (response.data.status === "success") {
+          history.go(0);
+        }
+      }
+    }
+  };
+
+  const changePassword = async () => {
+    const token = localStorage.getItem("token");
+    if (newPassword === confirmNewPassword) {
+      const response = await axios.post(`${Auth}/changePassword`, {
+        token,
+        password,
+        newpassword: newPassword,
+      });
+      console.log(response);
+      if (response.data.status === "success") {
+        alert("비밀번호 변경에 성공했습니다");
+        history.go(0);
+      } else {
+        alert(response.data.error);
+      }
+    } else {
+      alert("새 비밀번호를 확인해주세요");
+    }
+  };
+
+  const deleteUser = async (id, password, reason) => {
+    if (window.confirm("정말로 회원 탈퇴를 하시겠습니까?")) {
+      const quitAt = Date.now();
+      const response = await axios.post(`${Auth}/deleteUser`, {
+        id,
+        password,
+        reason,
+        quitAt,
+      });
+      console.log(response);
+    }
+  };
+
   useEffect(() => {
     if (photoURL) {
       updatePhotoURL(photoURL);
@@ -162,6 +251,7 @@ function ProfilePage({ match }) {
     dispatch(getMyClasses(profile));
     if (profile) {
       setMyIntroduction(profile.selfIntroduction);
+      setUsertype(profile.usertype);
     }
   }, [profile]);
 
@@ -285,15 +375,53 @@ function ProfilePage({ match }) {
       </div>
       {isMyProfile && (
         <div className="container">
-          <div className="profileItem">
-            <h4>비밀번호 변경</h4>
-            <div className="itemBody"></div>
-            <span className="itemFooter"></span>
-          </div>
+          {profile && profile.socialLogin !== "kakao" && (
+            <div className="profileItem">
+              <h4>비밀번호 변경</h4>
+              <div className="itemBody">
+                <input
+                  placeholder="기존 비밀번호"
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <input
+                  placeholder="새 비밀번호"
+                  type="password"
+                  value={newPassword}
+                  onChange={(event) => setNewPassword(event.target.value)}
+                />
+                <input
+                  placeholder="새 비밀번호 확인"
+                  type="password"
+                  value={confirmNewPassword}
+                  onChange={(event) =>
+                    setConfirmNewPassword(event.target.value)
+                  }
+                />
+              </div>
+              <span className="itemFooter">
+                <Button onClick={changePassword}>확인</Button>
+              </span>
+            </div>
+          )}
           <div className="profileItem">
             <h4>회원 유형 변경</h4>
-            <div className="itemBody"></div>
-            <span className="itemFooter"></span>
+            <div className="itemBody">
+              <SelectContainer>
+                <select
+                  value={usertype}
+                  onChange={(event) => setUsertype(event.target.value)}
+                >
+                  <option value="student">학생</option>
+                  <option value="teacher">선생님</option>
+                </select>
+                <FontAwesomeIcon className="dropDown" icon={faAngleDown} />
+              </SelectContainer>
+            </div>
+            <span className="itemFooter">
+              <Button onClick={updateUserType}>확인</Button>
+            </span>
           </div>
           <div className="profileItem">
             <h4>멤버쉽 상태 변경</h4>
@@ -304,8 +432,28 @@ function ProfilePage({ match }) {
           </div>
           <div className="profileItem">
             <h4>회원 탈퇴</h4>
-            <div className="itemBody"></div>
-            <span className="itemFooter"></span>
+            <div className="itemBody">
+              <input
+                placeholder="비밀번호"
+                type="password"
+                value={quitPassword}
+                onChange={(event) => setQuitPassword(event.target.value)}
+              />
+              <input
+                placeholder="탈퇴 이유를 적어주세요"
+                value={quitReason}
+                onChange={(event) => setQuitReason(event.target.value)}
+              />
+            </div>
+            <span className="itemFooter">
+              <Button
+                onClick={() =>
+                  deleteUser(userInfo._id, quitPassword, quitReason)
+                }
+              >
+                회원 탈퇴
+              </Button>
+            </span>
           </div>
         </div>
       )}

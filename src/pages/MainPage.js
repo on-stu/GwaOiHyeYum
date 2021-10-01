@@ -11,13 +11,12 @@ import { faAngleDown, faSadCry } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { Auth } from "../api/consts";
 import CardContainer from "../components/CardContainer";
-import Calendar from "../components/Calendar";
 import Card from "../components/Card";
 import { getMyClasses } from "../actions/classesActions";
 import BlankButton from "../components/BlankButton";
 import NotYet from "../components/NotYet";
 
-const SelectContainer = styled.div`
+export const SelectContainer = styled.div`
   display: flex;
   width: 100%;
   position: relative;
@@ -32,6 +31,7 @@ const SelectContainer = styled.div`
     background-color: #ffffff;
     font-family: inherit;
     border-radius: 15px;
+    font-size: 15px;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -114,7 +114,7 @@ function MainPage() {
       <Modal visible={modalVisible}>
         <Container>
           <h2>추가 정보 확인</h2>
-          <span>본인의 유형을 선택해주세요.</span>
+          <span>본인의 회원 유형을 선택해주세요.</span>
           <SelectContainer>
             <select
               value={usertype}
