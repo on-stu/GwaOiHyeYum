@@ -24,8 +24,8 @@ function App() {
       {!userInfo ? (
         <>
           <Switch>
-            <Route path="/" component={AuthPage} />
-            <Route path="/register" component={RegisterPage} />
+            <Route exact path="/" component={AuthPage} />
+            <Route path="/:isRegister" component={AuthPage} />
           </Switch>
         </>
       ) : (

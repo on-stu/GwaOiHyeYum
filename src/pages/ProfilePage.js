@@ -13,6 +13,7 @@ import NotYet from "../components/NotYet";
 import { SelectContainer } from "./MainPage";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import KaKaoLogin from "react-kakao-login";
 import axios from "axios";
 import { Auth } from "../api/consts";
 
@@ -221,7 +222,33 @@ function ProfilePage({ match }) {
         reason,
         quitAt,
       });
-      console.log(response);
+      if (response.data.status === "success") {
+        localStorage.removeItem("token");
+        history.go(0);
+      }
+    }
+  };
+
+  const responseKaKao = async (res) => {
+    const {
+      profile: { id },
+    } = res;
+    if (id) {
+      const quitAt = Date.now();
+      const response = await axios.post(`${Auth}/deleteUser`, {
+        id: userInfo._id,
+        reason: quitReason,
+        password: "kakao",
+        quitAt,
+      });
+
+      const {
+        data: { status },
+      } = response;
+      if (status === "success") {
+        localStorage.removeItem("token");
+        history.go(0);
+      }
     }
   };
 
@@ -233,7 +260,7 @@ function ProfilePage({ match }) {
 
   useEffect(() => {
     getUserProfile(id).then((res) => {
-      if (res.data.profile) {
+      if (res.data.profile.length !== 0) {
         setProfile(res.data.profile[0]);
         if (userInfo) {
           if (id === userInfo._id) {
@@ -432,28 +459,60 @@ function ProfilePage({ match }) {
           </div>
           <div className="profileItem">
             <h4>회원 탈퇴</h4>
-            <div className="itemBody">
-              <input
-                placeholder="비밀번호"
-                type="password"
-                value={quitPassword}
-                onChange={(event) => setQuitPassword(event.target.value)}
-              />
-              <input
-                placeholder="탈퇴 이유를 적어주세요"
-                value={quitReason}
-                onChange={(event) => setQuitReason(event.target.value)}
-              />
-            </div>
-            <span className="itemFooter">
-              <Button
-                onClick={() =>
-                  deleteUser(userInfo._id, quitPassword, quitReason)
-                }
-              >
-                회원 탈퇴
-              </Button>
-            </span>
+            {userInfo.socialLogin !== "kakao" ? (
+              <>
+                <div className="itemBody">
+                  <input
+                    placeholder="비밀번호"
+                    type="password"
+                    value={quitPassword}
+                    onChange={(event) => setQuitPassword(event.target.value)}
+                  />
+                  <input
+                    placeholder="탈퇴 이유를 적어주세요"
+                    value={quitReason}
+                    onChange={(event) => setQuitReason(event.target.value)}
+                  />
+                </div>
+                <span className="itemFooter">
+                  <Button
+                    onClick={() =>
+                      deleteUser(userInfo._id, quitPassword, quitReason)
+                    }
+                  >
+                    회원 탈퇴
+                  </Button>
+                </span>
+              </>
+            ) : (
+              <div className="itemBody">
+                <input
+                  placeholder="탈퇴 이유를 적어주세요"
+                  value={quitReason}
+                  onChange={(event) => setQuitReason(event.target.value)}
+                />
+                <KaKaoLogin
+                  className="kakaoLogin"
+                  jskey={"4c29c3d6db416c3bbf28c6c1517a41ac"}
+                  onSuccess={responseKaKao}
+                  onFail={() => alert("실패했습니다")}
+                  getProfile={true}
+                  style={{
+                    width: "100%",
+                    height: "56px",
+                    boxSizing: "border-box",
+                    backgroundColor: "#FFEB00",
+                    borderRadius: "10px",
+                    fontSize: "14px",
+                    outline: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  카카오로 인증 후 회원탈퇴하기
+                </KaKaoLogin>
+              </div>
+            )}
           </div>
         </div>
       )}
