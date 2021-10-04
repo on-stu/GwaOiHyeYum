@@ -1,8 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-function BlankButton({ onClick, children }) {
-  return <StyledButton onClick={onClick}>{children}</StyledButton>;
+function BlankButton({ onClick, children, width }) {
+  return (
+    <StyledButton onClick={onClick} width={width}>
+      {children}
+    </StyledButton>
+  );
 }
 
 const StyledButton = styled.button`
@@ -10,7 +14,7 @@ const StyledButton = styled.button`
   margin: 0;
   outline: none;
   border: none;
-  width: 100%;
+  width: ${(props) => (props.width ? props.width : "100%")};
   font-size: 18px;
   height: fit-content;
   background-color: transparent;

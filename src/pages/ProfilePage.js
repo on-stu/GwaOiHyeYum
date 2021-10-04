@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getUserProfile, updateUser } from "../lib/CustomFunctions";
+import {
+  followCancel,
+  followUser,
+  getUserProfile,
+  updateUser,
+} from "../lib/CustomFunctions";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { ProfileImage } from "../components/ProfileImage";
@@ -15,7 +20,9 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import KaKaoLogin from "react-kakao-login";
 import axios from "axios";
-import { Auth } from "../api/consts";
+import { Auth, Domain } from "../api/consts";
+import { getMyFollowers, getMyFollowings } from "../actions/followActions";
+import UserListButton from "../components/UserListButton";
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -76,9 +83,31 @@ const ProfileContainer = styled.div`
 
   .previewContext {
     margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    row-gap: 5px;
+  }
+
+  .previewBody {
     display: flex;
     flex-direction: column;
-    row-gap: 5px;
+    row-gap: 4px;
+  }
+
+  .previewRight {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  .previewRight > span {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
   }
 
   .uploadContainer {
@@ -106,6 +135,10 @@ const ProfileContainer = styled.div`
       width: 90%;
       display: flex;
     }
+    .itemBody {
+      margin-top: 10px;
+      padding: 5px;
+    }
   }
 `;
 
@@ -123,6 +156,9 @@ function ProfilePage({ match }) {
 
   const userInfo = useSelector((state) => state.user);
   const classes = useSelector((state) => state.classes);
+  const userFollowers = useSelector((state) => state.followers);
+  const userFollowings = useSelector((state) => state.followings);
+
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -233,22 +269,73 @@ function ProfilePage({ match }) {
     const {
       profile: { id },
     } = res;
-    if (id) {
-      const quitAt = Date.now();
-      const response = await axios.post(`${Auth}/deleteUser`, {
-        id: userInfo._id,
-        reason: quitReason,
-        password: "kakao",
-        quitAt,
-      });
+    if (window.confirm("정말로 탈퇴하시겠습니까?")) {
+      if (id) {
+        const quitAt = Date.now();
+        const response = await axios.post(`${Auth}/deleteUser`, {
+          id: userInfo._id,
+          reason: quitReason,
+          password: "kakao",
+          quitAt,
+        });
 
-      const {
-        data: { status },
-      } = response;
-      if (status === "success") {
-        localStorage.removeItem("token");
+        const {
+          data: { status },
+        } = response;
+        if (status === "success") {
+          localStorage.removeItem("token");
+          history.go(0);
+        }
+      }
+    }
+  };
+
+  const TestURL = `${Domain}/profile/${userInfo._id}`;
+
+  const shareProfileKakao = () => {
+    window.Kakao.Link.sendDefault({
+      objectType: "feed",
+      content: {
+        title: `${userInfo.nickname}의 혜윰 프로필입니다.`,
+        description: "프로필을 확인하고 팔로우해주세요!",
+        imageUrl: "",
+        link: {
+          webUrl: TestURL,
+          mobileWebUrl: TestURL,
+        },
+      },
+      buttons: [
+        {
+          title: "혜윰으로 이동",
+          link: {
+            webUrl: TestURL,
+            mobileWebUrl: TestURL,
+          },
+        },
+      ],
+    });
+  };
+
+  const FollowButton = () => {
+    followUser(userInfo._id, id).then((res) => {
+      if (res.data.status === "success") {
         history.go(0);
       }
+    });
+  };
+
+  const FollowCancleButton = () => {
+    if (
+      window.confirm(
+        `정말로 ${profile.nickname}님에 대한 팔로우를 취소하시겠습니까?`
+      )
+    ) {
+      followCancel(userInfo._id, id).then((res) => {
+        if (res.data.status === "success") {
+          alert("취소되었습니다.");
+          history.go(0);
+        }
+      });
     }
   };
 
@@ -260,11 +347,13 @@ function ProfilePage({ match }) {
 
   useEffect(() => {
     getUserProfile(id).then((res) => {
-      if (res.data.profile.length !== 0) {
-        setProfile(res.data.profile[0]);
-        if (userInfo) {
-          if (id === userInfo._id) {
-            setIsMyProfile(true);
+      if (res.data.status === "success") {
+        if (res.data.profile.length !== 0) {
+          setProfile(res.data.profile[0]);
+          if (userInfo) {
+            if (id === userInfo._id) {
+              setIsMyProfile(true);
+            }
           }
         }
       } else {
@@ -279,12 +368,21 @@ function ProfilePage({ match }) {
     if (profile) {
       setMyIntroduction(profile.selfIntroduction);
       setUsertype(profile.usertype);
+      dispatch(getMyFollowers(profile.follower));
+      dispatch(getMyFollowings(profile.following));
+    }
+    if (id === userInfo._id) {
+      setIsMyProfile(true);
+    } else {
+      setIsMyProfile(false);
     }
   }, [profile]);
 
   useEffect(() => {
     if (id === userInfo._id) {
       setIsMyProfile(true);
+    } else {
+      setIsMyProfile(false);
     }
   }, [userInfo]);
 
@@ -305,6 +403,8 @@ function ProfilePage({ match }) {
                       width: "100%",
                       paddingTop: "10px",
                       color: "white",
+                      borderBottomLeftRadius: "10px",
+                      borderBottomRightRadius: "10px",
                     }}
                   >
                     <h4 style={{ marginBottom: "10px" }}>사진 변경</h4>
@@ -318,6 +418,8 @@ function ProfilePage({ match }) {
                       width: "100%",
                       paddingTop: "10px",
                       color: "white",
+                      borderBottomLeftRadius: "10px",
+                      borderBottomRightRadius: "10px",
                     }}
                   >
                     <h4 style={{ marginBottom: "10px" }}>업로드</h4>
@@ -337,10 +439,47 @@ function ProfilePage({ match }) {
           <ProfileImage photoURL={profile && profile.photoURL} />
         )}
         <div className="previewContext">
-          <h2>{profile && profile.nickname}</h2>
-          <h4 style={{ color: "gray" }}>
-            {profile && profile.usertype === "teacher" ? "선생님 " : "학생 "}
-          </h4>
+          <div className="previewBody">
+            <h2>{profile && profile.nickname}</h2>
+            <h4 style={{ color: "gray" }}>
+              {profile && profile.usertype === "teacher" ? "선생님 " : "학생 "}
+            </h4>
+            {userInfo && userInfo._id === id ? (
+              <BlankButton onClick={shareProfileKakao}>
+                <h4>프로필 공유</h4>
+              </BlankButton>
+            ) : userInfo.following && userInfo.following.includes(id) ? (
+              <BlankButton onClick={FollowCancleButton}>
+                <h4>팔로잉</h4>
+              </BlankButton>
+            ) : (
+              <BlankButton onClick={FollowButton}>
+                <h4>팔로우</h4>
+              </BlankButton>
+            )}
+          </div>
+          <div className="previewRight">
+            <UserListButton
+              users={userFollowers && userFollowers}
+              type="follower"
+              title={`${profile && profile.nickname}님의 팔로워`}
+            >
+              <span>
+                <h4>팔로워</h4>
+                <h4>{profile && profile.follower.length}명</h4>
+              </span>
+            </UserListButton>
+            <UserListButton
+              users={userFollowings && userFollowings}
+              type="following"
+              title={`${profile && profile.nickname}님의 팔로잉`}
+            >
+              <span>
+                <h4>팔로잉 </h4>
+                <h4>{profile && profile.following.length}명</h4>
+              </span>
+            </UserListButton>
+          </div>
         </div>
       </div>
       <div className="container">
@@ -369,9 +508,13 @@ function ProfilePage({ match }) {
           </span>
         </div>
         <div className="profileItem">
-          <h4>개설 수업</h4>
+          {profile && profile.usertype === "teacher" ? (
+            <h4>개설 수업</h4>
+          ) : (
+            <h4>수강중인 수업</h4>
+          )}
           <div className="itemBody">
-            {classes &&
+            {classes && classes.length > 0 ? (
               classes.map((eachClass) => (
                 <BlankButton
                   key={eachClass._id}
@@ -388,7 +531,16 @@ function ProfilePage({ match }) {
                     }
                   />
                 </BlankButton>
-              ))}
+              ))
+            ) : (
+              <NotYet
+                placeholder={
+                  profile && profile.usertype === "teacher"
+                    ? "개설된 수업이 없습니다."
+                    : "수강중인 수업이 없습니다."
+                }
+              />
+            )}
           </div>
           <span className="itemFooter"></span>
         </div>
@@ -493,7 +645,7 @@ function ProfilePage({ match }) {
                 />
                 <KaKaoLogin
                   className="kakaoLogin"
-                  jskey={"4c29c3d6db416c3bbf28c6c1517a41ac"}
+                  jskey={"28725562855bb20f5d88ee3ce511eb3f"}
                   onSuccess={responseKaKao}
                   onFail={() => alert("실패했습니다")}
                   getProfile={true}

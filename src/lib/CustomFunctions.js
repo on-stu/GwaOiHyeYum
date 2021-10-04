@@ -47,7 +47,7 @@ export const getUserProfile = async (id) => {
     const profile = await axios.post(`${Auth}/getUserProfile`, { id: id });
     return profile;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -61,7 +61,16 @@ export const getClass = async (id) => {
 };
 
 export const updateUser = async (updatedUser) => {
-  console.log(updatedUser);
   const response = await axios.post(`${Auth}/updateUser`, { updatedUser });
+  return response;
+};
+
+export const followUser = async (fromId, toId) => {
+  const response = await axios.post(`${Auth}/followUser`, { fromId, toId });
+  return response;
+};
+
+export const followCancel = async (fromId, toId) => {
+  const response = await axios.post(`${Auth}/followCancel`, { fromId, toId });
   return response;
 };

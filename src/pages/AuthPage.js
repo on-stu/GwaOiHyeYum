@@ -232,7 +232,7 @@ function AuthPage({ match }) {
             </Button>
             <KaKaoLogin
               className="kakaoLogin"
-              jskey={"4c29c3d6db416c3bbf28c6c1517a41ac"}
+              jskey={"28725562855bb20f5d88ee3ce511eb3f"}
               onSuccess={responseKaKao}
               onFail={() => alert("실패했습니다")}
               getProfile={true}

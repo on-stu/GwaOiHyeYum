@@ -14,11 +14,11 @@ const Container = styled.div`
   color: gray;
 `;
 
-function NotYet() {
+function NotYet({ placeholder }) {
   return (
     <Container>
       <FontAwesomeIcon style={{ color: "gray" }} icon={faSadCry} />
-      <h4>준비중입니다.</h4>
+      {placeholder ? <h4>{placeholder}</h4> : <h4>준비중입니다.</h4>}
       <FontAwesomeIcon style={{ color: "gray" }} icon={faSadCry} />
     </Container>
   );

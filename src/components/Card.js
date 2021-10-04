@@ -60,8 +60,7 @@ function Card({ title, studentName, add, iconcolor, displayIcon }) {
         displayIcon: addIconSelect,
         iconColor: addColorSelect,
       };
-      dispatch(createClass(request));
-      history.go(0);
+      dispatch(createClass(request)).then(() => history.go(0));
     } else {
       alert("선생님만 수업을 개설할 수 있습니다.");
     }
