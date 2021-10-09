@@ -1,0 +1,77 @@
+const paragraph =
+  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet natus sint provident vel ab reprehenderit cum soluta, suscipit facere nisi sed earum repellendus fuga debitis, nam molestiae minima voluptates possimus.";
+
+export const curriculum = [
+  {
+    title: "To 부정사의 이해",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: true,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+  {
+    title: "동명사의 이해",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: false,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+  {
+    title: "현재완료 시제의 이해",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: false,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+  {
+    title: "문제 풀기",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: false,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+  {
+    title: "To 부정사의 이해",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: false,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+  {
+    title: "To 부정사의 이해",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: false,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+  {
+    title: "To 부정사의 이해",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: false,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+  {
+    title: "To 부정사의 이해",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: false,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+  {
+    title: "To 부정사의 이해",
+    context: "안녕하세요 ㅋㅋ",
+    isCurrent: false,
+    paragraph,
+    assignment: [{ title: "과제 1" }, { title: "과제 2" }],
+    quizes: [{ title: "퀴즈 1" }, { title: "퀴즈 2" }],
+  },
+];

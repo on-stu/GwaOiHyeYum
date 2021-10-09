@@ -12,14 +12,19 @@ function BlankButton({ onClick, children, width }) {
 const StyledButton = styled.button`
   padding: 0;
   margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   outline: none;
   border: none;
   width: ${(props) => (props.width ? props.width : "100%")};
   font-size: 18px;
   height: fit-content;
   background-color: transparent;
-  :focus {
-    background-color: gray;
+  color: ${(props) => (props.color ? props.color : "black")};
+  cursor: pointer;
+  :hover {
+    cursor: pointer;
   }
 `;
 export default BlankButton;

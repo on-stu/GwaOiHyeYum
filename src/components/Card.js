@@ -11,30 +11,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { createClass } from "../actions/classesActions";
 import { useHistory } from "react-router";
 
-const SelectContainer = styled.div`
+const RadioContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  position: relative;
-  outline: none;
-  border: none;
+  row-gap: 12px;
 
-  select {
+  .radioTitle {
+    display: flex;
     width: 100%;
-    padding: 10px;
-    border: 1px solid gray;
-    outline: none;
-    background-color: #ffffff;
-    font-family: inherit;
-    border-radius: 15px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
   }
 
-  .dropDown {
-    position: absolute;
-    right: 10px;
-    top: 11px;
+  .options {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 `;
 
@@ -72,7 +65,7 @@ function Card({ title, studentName, add, iconcolor, displayIcon }) {
         <Modal visible={modalVisible}>
           <ModalContainer>
             <h2>수업 추가</h2>
-            <form onSubmit={onSubmit}>
+            <div className="form">
               <input
                 type="text"
                 value={addClassTitle}
@@ -89,43 +82,80 @@ function Card({ title, studentName, add, iconcolor, displayIcon }) {
                 onChange={(event) => setAddClassSubject(event.target.value)}
                 placeholder="과목"
               />
-              <SelectContainer>
-                <select
-                  value={addIconSelect}
-                  onChange={(event) => setAddIconSelect(event.target.value)}
-                  required
-                >
-                  <option value="" disabled selected>
-                    :: 아이콘 선택 ::
-                  </option>
-                  <option value="book">책</option>
-                  <option value="check">체크</option>
-                  <option value="clipboard">클립보드</option>
-                  <option value="clip">클립</option>
-                  <option value="postit">포스트 잇</option>
-                </select>
-                <FontAwesomeIcon className="dropDown" icon={faAngleDown} />
-              </SelectContainer>
-              <SelectContainer>
-                <select
-                  value={addColorSelect}
-                  required
-                  onChange={(event) => {
-                    setAddColorSelect(event.target.value);
-                    console.log(getColor(addColorSelect));
-                  }}
-                >
-                  <option value="black" selected>
-                    :: 아이콘 색 선택 ::
-                  </option>
-                  <option value="black">검정색</option>
-                  <option value="green">초록색</option>
-                  <option value="blue">파란색</option>
-                  <option value="red">빨간색</option>
-                  <option value="purple">보라색</option>
-                </select>
-                <FontAwesomeIcon className="dropDown" icon={faAngleDown} />
-              </SelectContainer>
+              <RadioContainer>
+                <div className="radioTitle">
+                  <h4 style={{ color: "gray" }}>아이콘 선택</h4>
+                </div>
+                <div className="options">
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddIconSelect("book")}
+                  >
+                    <FontAwesomeIcon icon={getDisplayIcon("book")} />
+                  </BlankButton>
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddIconSelect("check")}
+                  >
+                    <FontAwesomeIcon icon={getDisplayIcon("check")} />
+                  </BlankButton>
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddIconSelect("clipboard")}
+                  >
+                    <FontAwesomeIcon icon={getDisplayIcon("clipboard")} />
+                  </BlankButton>
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddIconSelect("clip")}
+                  >
+                    <FontAwesomeIcon icon={getDisplayIcon("clip")} />
+                  </BlankButton>
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddIconSelect("postit")}
+                  >
+                    <FontAwesomeIcon icon={getDisplayIcon("postit")} />
+                  </BlankButton>
+                </div>
+              </RadioContainer>
+              <RadioContainer>
+                <div className="radioTitle">
+                  <h4 style={{ color: "gray" }}>아이콘 색 선택</h4>
+                </div>
+                <div className="options">
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddColorSelect("black")}
+                  >
+                    <ColorDiv bgcolor={getColor("black")} />
+                  </BlankButton>
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddColorSelect("green")}
+                  >
+                    <ColorDiv bgcolor={getColor("green")} />
+                  </BlankButton>
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddColorSelect("blue")}
+                  >
+                    <ColorDiv bgcolor={getColor("blue")} />
+                  </BlankButton>
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddColorSelect("red")}
+                  >
+                    <ColorDiv bgcolor={getColor("red")} />
+                  </BlankButton>
+                  <BlankButton
+                    width="fit-content"
+                    onClick={() => setAddColorSelect("purple")}
+                  >
+                    <ColorDiv bgcolor={getColor("purple")} />
+                  </BlankButton>
+                </div>
+              </RadioContainer>
               <div className="previewContainer">
                 <h4 style={{ color: "gray" }}>미리 보기</h4>
                 <Container iconcolor={getColor(addColorSelect)}>
@@ -149,9 +179,9 @@ function Card({ title, studentName, add, iconcolor, displayIcon }) {
                 >
                   취소
                 </Button>
-                <Button type="submit">추가</Button>
+                <Button onClick={onSubmit}>추가</Button>
               </div>
-            </form>
+            </div>
           </ModalContainer>
         </Modal>
       )}
@@ -208,7 +238,9 @@ const Container = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  form {
+  width: 100%;
+
+  .form {
     display: flex;
     flex-direction: column;
     row-gap: 16px;
@@ -216,7 +248,7 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  form input {
+  .form input {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -224,7 +256,7 @@ const ModalContainer = styled.div`
     outline: none;
     border: 1px solid gray;
   }
-  form .buttonContainer {
+  .form .buttonContainer {
     display: flex;
     justify-content: space-between;
   }
@@ -241,6 +273,13 @@ const ModalContainer = styled.div`
   .addIcon {
     color: ${(props) => props.iconcolor};
   }
+`;
+
+const ColorDiv = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background-color: ${(props) => props.bgcolor};
 `;
 
 export default Card;

@@ -13,8 +13,14 @@ const Container = styled.div`
   border-radius: 10px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
     rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
-  h2 {
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 24px;
+  }
+  .title > span {
+    cursor: pointer;
   }
   @media screen and (max-width: 1024px) {
     width: 100%;
@@ -22,10 +28,13 @@ const Container = styled.div`
   }
 `;
 
-function CardContainer({ title, children }) {
+function CardContainer({ title, children, moreOnClick }) {
   return (
     <Container>
-      <h2>{title}</h2>
+      <div className="title">
+        <h2>{title}</h2>
+        <span onClick={moreOnClick}>더보기</span>
+      </div>
       {children}
     </Container>
   );

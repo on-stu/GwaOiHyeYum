@@ -186,7 +186,10 @@ function MainPage() {
               displayIcon="check"
             />
           </CardContainer>
-          <CardContainer title="내 퀴즈">
+          <CardContainer
+            title="내 퀴즈"
+            moreOnClick={() => history.push("/quizMaker")}
+          >
             <NotYet />
           </CardContainer>
           <CardContainer title="내 질문">

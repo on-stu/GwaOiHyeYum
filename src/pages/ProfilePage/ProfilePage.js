@@ -4,25 +4,25 @@ import {
   followUser,
   getUserProfile,
   updateUser,
-} from "../lib/CustomFunctions";
+} from "../../lib/CustomFunctions";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { ProfileImage } from "../components/ProfileImage";
-import { getMyClasses } from "../actions/classesActions";
+import { ProfileImage } from "../../components/ProfileImage";
+import { getMyClasses } from "../../actions/classesActions";
 import { useDispatch, useSelector } from "react-redux";
-import BlankButton from "../components/BlankButton";
-import Card from "../components/Card";
-import TextArea from "../components/TextArea";
+import BlankButton from "../../components/BlankButton";
+import Card from "../../components/Card";
+import TextArea from "../../components/TextArea";
 import { Button } from "@material-ui/core";
-import NotYet from "../components/NotYet";
-import { SelectContainer } from "./MainPage";
+import NotYet from "../../components/NotYet";
+import { SelectContainer } from "../MainPage";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import KaKaoLogin from "react-kakao-login";
 import axios from "axios";
-import { Auth, Domain } from "../api/consts";
-import { getMyFollowers, getMyFollowings } from "../actions/followActions";
-import UserListButton from "../components/UserListButton";
+import { Auth, Domain } from "../../api/consts";
+import { getMyFollowers, getMyFollowings } from "../../actions/followActions";
+import UserListButton from "../../components/UserListButton";
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -290,7 +290,7 @@ function ProfilePage({ match }) {
     }
   };
 
-  const TestURL = `${Domain}/profile/${userInfo._id}`;
+  const ProfileURL = `${Domain}/profile/${userInfo._id}`;
 
   const shareProfileKakao = () => {
     window.Kakao.Link.sendDefault({
@@ -300,16 +300,16 @@ function ProfilePage({ match }) {
         description: "프로필을 확인하고 팔로우해주세요!",
         imageUrl: "",
         link: {
-          webUrl: TestURL,
-          mobileWebUrl: TestURL,
+          webUrl: ProfileURL,
+          mobileWebUrl: ProfileURL,
         },
       },
       buttons: [
         {
           title: "혜윰으로 이동",
           link: {
-            webUrl: TestURL,
-            mobileWebUrl: TestURL,
+            webUrl: ProfileURL,
+            mobileWebUrl: ProfileURL,
           },
         },
       ],
