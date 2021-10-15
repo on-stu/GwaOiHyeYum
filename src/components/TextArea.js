@@ -7,19 +7,20 @@ const StyledTextArea = styled.textarea`
   border: none;
   outline: none;
   resize: none;
-  height: 200px;
+  height: ${(props) => (props.height ? props.height : "200px")};
   font-size: 15px;
   padding: 15px;
   box-sizing: border-box;
 `;
 
-function TextArea({ value, onChange }) {
+function TextArea({ value, onChange, placeholder, height }) {
   return (
     <StyledTextArea
       value={value}
       onChange={onChange}
       maxLength={300}
-      placeholder="자기소개글을 작성해주세요!"
+      placeholder={placeholder}
+      height={height}
     ></StyledTextArea>
   );
 }

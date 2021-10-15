@@ -45,6 +45,16 @@ const TypeContainer = styled.div`
     width: 100%;
     justify-content: center;
   }
+
+  @media screen and (max-width: 1024px) {
+    margin-top: 40px;
+    width: 90%;
+    flex-direction: column;
+    row-gap: 20px;
+    .typeItem {
+      width: 100%;
+    }
+  }
 `;
 
 function TypeChoose() {

@@ -62,7 +62,7 @@ const ChapterAccordion = ({ index, title, paragraph }) => {
     <Container opened={opened}>
       <BlankButton onClick={() => setOpened(!opened)} width="100%">
         <div className="title">
-          {index < 10 ? "0" + (index + 1) : index + 1}&nbsp;
+          {index < 9 ? "0" + (index + 1) : index + 1}&nbsp;
           {title}
           <Button onClick={() => setOpened(!opened)}>
             <FontAwesomeIcon

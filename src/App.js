@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import AuthPage from "./pages/AuthPage";
-import RegisterPage from "./pages/RegisterPage";
 import { useEffect } from "react";
 import { getUserObj } from "./actions/userActions";
 import MainPage from "./pages/MainPage";
@@ -10,6 +9,8 @@ import Footer from "./components/Footer";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import ClassPage from "./pages/ClassPage/ClassPage";
 import QuizMaker from "./pages/QuizPage/QuizMaker";
+import QuizSolve from "./pages/QuizPage/QuizSolve";
+import QuizInfo from "./pages/QuizPage/QuizInfo";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getUserObj(token));
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   return (
     <Router>
@@ -37,6 +38,8 @@ function App() {
             <Route path="/profile/:id" component={ProfilePage} />
             <Route path="/class/:classId" component={ClassPage} />
             <Route path="/quizMaker" component={QuizMaker} />
+            <Route path="/quizSolve/:quizId" component={QuizSolve} />
+            <Route path="/quizInfo/:quizId" component={QuizInfo} />
           </Switch>
         </>
       )}

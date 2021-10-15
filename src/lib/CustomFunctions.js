@@ -1,12 +1,13 @@
 import {
   faBook,
+  faBrain,
   faCheck,
   faClipboard,
   faPaperclip,
   faStickyNote,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { Auth, Classes } from "../api/consts";
+import { API, Auth, Classes } from "../api/consts";
 
 export const getDisplayIcon = (displayIcon) => {
   switch (displayIcon) {
@@ -20,6 +21,8 @@ export const getDisplayIcon = (displayIcon) => {
       return faPaperclip;
     case "postit":
       return faStickyNote;
+    case "brain":
+      return faBrain;
     default:
       return displayIcon;
   }
@@ -37,8 +40,19 @@ export const getColor = (color) => {
       return "#e74c3c";
     case "purple":
       return "#9b59b6";
+    case "skyblue":
+      return "#95c4cc";
     default:
       return color;
+  }
+};
+
+export const getQuiz = async (id) => {
+  try {
+    const quiz = await axios.post(`${API}/quiz/getQuiz`, { id: id });
+    return quiz;
+  } catch (error) {
+    return error;
   }
 };
 

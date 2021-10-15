@@ -15,6 +15,7 @@ import Card from "../components/Card";
 import { getMyClasses } from "../actions/classesActions";
 import BlankButton from "../components/BlankButton";
 import NotYet from "../components/NotYet";
+import { getMyQuizes } from "../actions/quizesActions";
 
 export const SelectContainer = styled.div`
   display: flex;
@@ -85,6 +86,8 @@ function MainPage() {
   const history = useHistory();
   const userInfo = useSelector((state) => state.user);
   const classes = useSelector((state) => state.classes);
+  const quizes = useSelector((state) => state.quizesState);
+
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [usertype, setUsertype] = useState("student");
@@ -99,6 +102,7 @@ function MainPage() {
 
   useEffect(() => {
     dispatch(getMyClasses(userInfo));
+    dispatch(getMyQuizes(userInfo));
   }, [userInfo]);
 
   const chooseUserType = async () => {
@@ -132,13 +136,6 @@ function MainPage() {
       </Modal>
       <MainContainer>
         <div className="container">
-          <CardContainer title="오늘 일정">
-            <Card
-              displayIcon={faSadCry}
-              iconcolor="gray"
-              title="오늘 일정이 없습니다!"
-            />
-          </CardContainer>
           <CardContainer title="내 수업">
             {classes &&
               classes.map((eachClass) => (
@@ -161,36 +158,28 @@ function MainPage() {
             <Card add={true} />
           </CardContainer>
           <CardContainer title="내 과제">
-            <Card
-              title="그래머존 56페이지"
-              iconcolor="#e74c3c"
-              studentName="김민수 학생"
-              displayIcon="postit"
-            />
-            <Card
-              title="쎈 3단원 마무리"
-              displayIcon="book"
-              iconcolor="#9b59b6"
-              studentName="엄세정 학생"
-            />
-            <Card
-              title="워드 마스터 DAY6"
-              iconcolor="#9b59b6"
-              studentName="엄세정 학생"
-              displayIcon="clipboard"
-            />
-            <Card
-              title="교과서 3과 본문 읽기"
-              iconcolor="#e74c3c"
-              studentName="김민수 학생"
-              displayIcon="check"
-            />
+            <NotYet />
           </CardContainer>
           <CardContainer
             title="내 퀴즈"
             moreOnClick={() => history.push("/quizMaker")}
           >
-            <NotYet />
+            {quizes && quizes.length > 0 ? (
+              quizes.map((item) => (
+                <BlankButton
+                  key={item._id}
+                  onClick={() => history.push(`/quizInfo/${item._id}`)}
+                >
+                  <Card
+                    title={item.title}
+                    displayIcon="brain"
+                    iconcolor="skyblue"
+                  />
+                </BlankButton>
+              ))
+            ) : (
+              <NotYet placeholder="추가된 퀴즈가 없습니다." />
+            )}
           </CardContainer>
           <CardContainer title="내 질문">
             <NotYet />

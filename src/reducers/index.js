@@ -5,6 +5,7 @@ import classes from "./classes";
 import followers from "./follwers";
 import followings from "./followings";
 import quizState from "./quiz";
+import quizesState from "./quizes";
 
 export default combineReducers({
   user,
@@ -12,4 +13,5 @@ export default combineReducers({
   followers,
   followings,
   quizState,
+  quizesState,
 });

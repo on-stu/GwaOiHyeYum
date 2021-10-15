@@ -38,7 +38,13 @@ const ProfileContainer = styled.div`
   border-radius: 10%;
 `;
 
-function ProfileCard({ userId, userNickname, userType, userPhotoURL }) {
+function ProfileCard({
+  userId,
+  userNickname,
+  userType,
+  userPhotoURL,
+  nofollowBtn,
+}) {
   const userInfo = useSelector((state) => state.user);
 
   return (
@@ -58,13 +64,15 @@ function ProfileCard({ userId, userNickname, userType, userPhotoURL }) {
         {userNickname}&nbsp;
         {userType === "teacher" ? "선생님" : "학생"}
       </div>
-      <div className="followInfo">
-        {userInfo.following && userInfo.following.includes(userId)
-          ? "팔로잉"
-          : userInfo && userInfo._id === userId
-          ? "나"
-          : "팔로우"}
-      </div>
+      {!nofollowBtn && (
+        <div className="followInfo">
+          {userInfo.following && userInfo.following.includes(userId)
+            ? "팔로잉"
+            : userInfo && userInfo._id === userId
+            ? "나"
+            : "팔로우"}
+        </div>
+      )}
     </Container>
   );
 }

@@ -489,6 +489,7 @@ function ProfilePage({ match }) {
             {isMyProfile ? (
               <TextArea
                 value={myIntroduction}
+                placeholder="자기소개글을 작성해주세요!"
                 onChange={(event) => setMyIntroduction(event.target.value)}
               />
             ) : (
