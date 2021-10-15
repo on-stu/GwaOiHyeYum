@@ -1,6 +1,6 @@
-export const Auth = process.env.API_AUTH || "http://localhost:5000/auth";
-export const Classes = process.env.API_CLASSES || "http://localhost:5000/class";
-export const API = process.env.API || "http://localhost:5000";
+export const API = process.env.API || "https://api.혜윰.com";
+export const Auth = process.env.API_AUTH || `${API}/auth`;
+export const Classes = process.env.API_CLASSES || `${API}/class`;
 
 // export const Auth = "https://api.혜윰.com/auth";
 // export const Classes = "https://api.혜윰.com/class";
