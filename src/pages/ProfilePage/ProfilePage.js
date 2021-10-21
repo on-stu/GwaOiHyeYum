@@ -23,6 +23,7 @@ import axios from "axios";
 import { Auth, Domain } from "../../api/consts";
 import { getMyFollowers, getMyFollowings } from "../../actions/followActions";
 import UserListButton from "../../components/UserListButton";
+import { getMyQuizes } from "../../actions/quizesActions";
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -158,6 +159,7 @@ function ProfilePage({ match }) {
   const classes = useSelector((state) => state.classes);
   const userFollowers = useSelector((state) => state.followers);
   const userFollowings = useSelector((state) => state.followings);
+  const quizes = useSelector((state) => state.quizesState);
 
   const dispatch = useDispatch();
 
@@ -365,6 +367,7 @@ function ProfilePage({ match }) {
 
   useEffect(() => {
     dispatch(getMyClasses(profile));
+    dispatch(getMyQuizes(profile));
     if (profile) {
       setMyIntroduction(profile.selfIntroduction);
       setUsertype(profile.usertype);
@@ -548,7 +551,22 @@ function ProfilePage({ match }) {
         <div className="profileItem">
           <h4>퀴즈</h4>
           <div className="itemBody">
-            <NotYet />
+            {quizes && quizes.length > 0 ? (
+              quizes.map((item) => (
+                <BlankButton
+                  key={item._id}
+                  onClick={() => history.push(`/quizInfo/${item._id}`)}
+                >
+                  <Card
+                    title={item.title}
+                    displayIcon="brain"
+                    iconcolor="skyblue"
+                  />
+                </BlankButton>
+              ))
+            ) : (
+              <NotYet placeholder="추가된 퀴즈가 없습니다." />
+            )}
           </div>
           <span className="itemFooter"></span>
         </div>

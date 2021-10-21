@@ -18,7 +18,7 @@ const Container = styled.div`
   padding: 10px;
   box-sizing: border-box;
   span {
-    width: 25%;
+    width: fit-content;
     display: flex;
     column-gap: 4px;
     color: gray;

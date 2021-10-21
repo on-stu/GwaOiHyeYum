@@ -6,7 +6,7 @@ import EnglishWordsQuiz from "./MakerComponents/EnglishWordsQuiz";
 import NormalQuiz from "./MakerComponents/NormalQuiz";
 import TypeChoose from "./MakerComponents/TypeChoose";
 import { useDispatch, useSelector } from "react-redux";
-import { MODIFY_QUIZ } from "../../reducers/quiz";
+import { INIT_QUIZ, MODIFY_QUIZ } from "../../reducers/quiz";
 
 const Container = styled.div`
   width: 100%;
@@ -31,6 +31,10 @@ function QuizMaker() {
         addedTo: [userInfo._id],
       },
     });
+    return () => {
+      dispatch({ type: INIT_QUIZ });
+      console.log("cleanup");
+    };
   }, [userInfo]);
 
   useState(() => {

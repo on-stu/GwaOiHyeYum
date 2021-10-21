@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { getColor, getQuiz } from "../../lib/CustomFunctions";
 import styled from "styled-components";
@@ -19,9 +19,16 @@ import axios from "axios";
 import { API, Domain } from "../../api/consts";
 import SpecificTypes from "./InfoComponents/SpecificTypes";
 import MaterialButton from "../../components/MaterialButton";
-import NotYet from "../../components/NotYet";
 import ProfileCard from "../../components/ProfileCard";
 import TextArea from "../../components/TextArea";
+import {
+  DISLIKE_QUIZ,
+  GET_QUIZ,
+  INIT_QUIZ,
+  LIKE_QUIZ,
+} from "../../reducers/quiz";
+import { dislikeQuiz, likeQuiz } from "../../actions/quizActions";
+import { ADD_ANSWER } from "../../reducers/solveQuiz";
 
 const Container = styled.div`
   display: flex;
@@ -80,6 +87,12 @@ const Container = styled.div`
     row-gap: 10px;
   }
 
+  .submitButton {
+    display: flex;
+    margin-top: 10px;
+    justify-content: flex-end;
+  }
+
   @media screen and (max-width: 1024px) {
     .top {
       flex-direction: column;
@@ -105,11 +118,13 @@ function QuizInfo({ match }) {
     params: { quizId },
   } = match;
 
-  const [quiz, setQuiz] = useState();
   const [isMyQuiz, setIsMyQuiz] = useState(false);
 
   const history = useHistory();
   const userInfo = useSelector((state) => state.user);
+  const quiz = useSelector((state) => state.quizState);
+  const solveQuizState = useSelector((state) => state.solveQuizState);
+  const dispatch = useDispatch();
 
   const shareURL = `${Domain}/quizInfo/${quizId}`;
 
@@ -142,19 +157,24 @@ function QuizInfo({ match }) {
       console.log(res.data.quiz);
       if (res.data.status === "success") {
         if (res.data.quiz.length !== 0) {
-          setQuiz(res.data.quiz[0]);
+          dispatch({ type: GET_QUIZ, payload: res.data.quiz[0] });
         }
       } else {
         alert("퀴즈 정보를 찾을 수 없습니다.");
         history.go(-1);
       }
     });
+    return () => {
+      dispatch({ type: INIT_QUIZ });
+      console.log("cleanup");
+    };
   }, []);
 
   useEffect(() => {
     if (quiz && quiz.creatorId === userInfo._id) {
       setIsMyQuiz(true);
     }
+    console.log(quiz, solveQuizState);
   }, [userInfo, quiz]);
 
   const removeQuiz = async () => {
@@ -211,7 +231,7 @@ function QuizInfo({ match }) {
                 </span>
               </BlankButton>
             ) : (
-              "내퀴즈 아님 ㅋ"
+              ""
             )}
           </h3>
         </span>
@@ -241,6 +261,7 @@ function QuizInfo({ match }) {
               color="blue"
               text="문제 풀어보기"
               icon={faPencilAlt}
+              onClick={() => history.push(`/quizSolve/${quizId}`)}
             />
             <MaterialButton
               color="blue"
@@ -250,8 +271,35 @@ function QuizInfo({ match }) {
             />
           </span>
           <span className="commentsIcons">
-            <FontAwesomeIcon icon={faHeart} style={{ cursor: "pointer" }} />
-            {quiz && quiz.likes.length}
+            {quiz && quiz.likes.includes(userInfo._id) ? (
+              <>
+                <BlankButton
+                  width="fit-content"
+                  onClick={() => {
+                    dislikeQuiz(quizId, userInfo._id);
+                    dispatch({ type: DISLIKE_QUIZ, payload: userInfo._id });
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    style={{ cursor: "pointer", color: getColor("red") }}
+                  />
+                </BlankButton>
+                {quiz && quiz.likes.length}
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  onClick={() => {
+                    likeQuiz(quizId, userInfo._id);
+                    dispatch({ type: LIKE_QUIZ, payload: userInfo._id });
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+                {quiz && quiz.likes.length}
+              </>
+            )}
             <FontAwesomeIcon icon={faComment} />
             {quiz && quiz.comments.length}
           </span>
@@ -269,6 +317,9 @@ function QuizInfo({ match }) {
               nofollowBtn={true}
             />
             <TextArea height="100px" placeholder="댓글을 달아주세요." />
+            <div className="submitButton">
+              <MaterialButton color="skyblue" text="쓰기" />
+            </div>
           </div>
         </span>
       </div>

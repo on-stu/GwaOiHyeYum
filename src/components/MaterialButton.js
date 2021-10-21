@@ -18,7 +18,7 @@ function MaterialButton({ text, onClick, icon, color }) {
           width: "100%",
         }}
       >
-        <FontAwesomeIcon icon={icon} />
+        {icon && <FontAwesomeIcon icon={icon} />}
         <span>{text}</span>
       </span>
     </BlankButton>
